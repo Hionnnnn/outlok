@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outlook Bulk Manager Pro</title>
+<style>
+:root{--bg:#0a0c12;--panel:#11151e;--panel-2:#161b26;--border:#1f2735;--text:#e7ecf6;--muted:#8b96ab;--muted-2:#5f6a7e;--accent:#5b8cff;--accent-2:#22d3ee;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--radius:14px;--shadow:0 18px 40px rgba(0,0,0,.45)}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;background:radial-gradient(1100px 560px at 85% -12%,rgba(91,140,255,.14),transparent 62%),radial-gradient(900px 520px at -5% 0%,rgba(34,211,238,.09),transparent 58%),var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;font-size:14px}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#232c3b;border-radius:20px;border:2px solid var(--bg)}
+.global-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;opacity:0;transition:.25s;pointer-events:none}
+.global-bar.active{opacity:1}
+.global-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 14px rgba(91,140,255,.8);transition:width .2s}
+.app{display:flex;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:266px;z-index:90;background:linear-gradient(180deg,#0d1119,#090c12);border-right:1px solid var(--border);display:flex;flex-direction:column;transition:transform .26s}
+.brand{padding:20px 18px 16px;display:flex;gap:11px;align-items:center;border-bottom:1px solid #1a212c}
+.brand-logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(140deg,var(--accent),#8b5cf6 55%,var(--accent-2));display:grid;place-items:center;font-weight:800;font-size:16px;color:#fff;box-shadow:0 8px 22px rgba(91,140,255,.35)}
+.brand-text b{display:block;font-size:13.5px;letter-spacing:.4px}
+.brand-text span{font-size:10.5px;color:var(--muted-2);letter-spacing:1.4px;text-transform:uppercase}
+.nav{padding:14px 10px;display:flex;flex-direction:column;gap:3px;overflow-y:auto;flex:1}
+.nav-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted-2);padding:14px 12px 7px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:11px;width:100%;padding:10px 12px;border-radius:10px;border:0;cursor:pointer;background:transparent;color:var(--muted);font-size:13.2px;font-weight:500;font-family:inherit;text-align:left;transition:.16s}
+.nav-item .ico{width:18px;text-align:center;font-size:14px;opacity:.85}
+.nav-item:hover{background:#141a24;color:var(--text)}
+.nav-item.active{background:linear-gradient(90deg,rgba(91,140,255,.18),rgba(91,140,255,.03));color:#dbe6ff;box-shadow:inset 2px 0 0 var(--accent)}
+.nav-item .badge{margin-left:auto;background:#1e2634;color:var(--muted);font-size:10.5px;padding:1px 7px;border-radius:20px;font-weight:600}
+.sidebar-foot{padding:12px 16px 16px;border-top:1px solid #1a212c;font-size:11px;color:var(--muted-2);display:flex;flex-direction:column;gap:8px}
+.mode-chip{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:600;padding:6px 10px;border-radius:8px;background:#151b25;border:1px solid var(--border)}
+.mode-dot{width:7px;height:7px;border-radius:50%;background:var(--muted-2)}
+.mode-chip.on .mode-dot{background:var(--green);box-shadow:0 0 10px var(--green)}
+.main{flex:1;margin-left:266px;padding:0 26px 70px;min-width:0}
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;padding:18px 0 14px;margin-bottom:6px;background:linear-gradient(180deg,var(--bg) 68%,rgba(10,12,18,0));backdrop-filter:blur(8px)}
+.page-title h1{margin:0;font-size:19px;font-weight:700}
+.page-title p{margin:3px 0 0;font-size:12.4px;color:var(--muted)}
+.topbar-actions{margin-left:auto;display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.hamburger{display:none}
+.btn{font-family:inherit;font-size:12.8px;font-weight:600;padding:9px 15px;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:.16s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#4a7bf5);color:#fff;box-shadow:0 6px 18px rgba(91,140,255,.3)}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-ghost{background:#151b25;border-color:var(--border);color:var(--text)}
+.btn-ghost:hover{background:#1b2230}
+.btn-danger{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.35);color:#ff9c9c}
+.btn-danger:hover{background:rgba(239,68,68,.24)}
+.btn-sm{padding:6px 11px;font-size:11.8px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.icon-btn{background:transparent;border:1px solid transparent;color:var(--muted);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:13px;display:inline-grid;place-items:center;transition:.15s}
+.icon-btn:hover{background:#1b2230;color:var(--text)}
+.icon-btn.danger:hover{background:rgba(239,68,68,.16);color:#ff9c9c}
+.input,.select,textarea.textarea{font-family:inherit;font-size:13px;color:var(--text);background:#0e131b;border:1px solid var(--border);border-radius:10px;padding:9px 12px;outline:none;transition:.16s;width:100%}
+.input:focus,.select:focus,textarea.textarea:focus{border-color:rgba(91,140,255,.6);box-shadow:0 0 0 3px rgba(91,140,255,.13)}
+.input::placeholder{color:var(--muted-2)}
+textarea.textarea{min-height:190px;resize:vertical;line-height:1.7;font-family:'SF Mono',ui-monospace,Menlo,Consolas,monospace;font-size:12.6px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11.6px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.field .hint{font-size:11px;color:var(--muted-2);margin-top:5px;line-height:1.5}
+.view{display:none;animation:fade .28s}.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.panel{background:linear-gradient(180deg,var(--panel),#0f131b);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px;box-shadow:0 8px 26px rgba(0,0,0,.22)}
+.panel-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.panel-head h3{margin:0;font-size:14px;font-weight:700}
+.panel-head .spacer{margin-left:auto}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid-2>.panel{margin-bottom:0}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:14px;margin-bottom:18px}
+.stat-card{background:linear-gradient(160deg,var(--panel-2),#0f131b);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;position:relative;overflow:hidden}
+.stat-top{display:flex;align-items:center;gap:8px;font-size:11.4px;color:var(--muted);font-weight:600}
+.stat-top .dot{width:7px;height:7px;border-radius:50%;margin-left:auto;background:var(--accent)}
+.stat-top .dot.green{background:var(--green)}.stat-top .dot.gray{background:var(--muted-2)}.stat-top .dot.red{background:var(--red)}.stat-top .dot.cyan{background:var(--accent-2)}
+.stat-value{font-size:27px;font-weight:800;letter-spacing:-1px;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.stat-sub{font-size:11.2px;color:var(--muted-2)}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quick-btn{text-align:left;cursor:pointer;background:#1a2130;border:1px solid var(--border);color:var(--text);padding:13px;border-radius:11px;font-size:12.6px;font-weight:600;display:flex;align-items:center;gap:10px;transition:.16s;font-family:inherit}
+.quick-btn:hover{border-color:rgba(91,140,255,.55);background:#1d2534}
+.progress{height:9px;background:#0b0f16;border-radius:20px;overflow:hidden;border:1px solid var(--border);margin:12px 0 8px}
+.progress-fill{height:100%;width:0%;border-radius:20px;transition:width .3s;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 12px rgba(91,140,255,.6)}
+.table-wrap{overflow:auto;border:1px solid #1a212c;border-radius:12px;background:#0c1017}
+table.table{width:100%;border-collapse:collapse;font-size:12.8px;min-width:640px}
+table.table thead th{text-align:left;padding:11px 13px;font-size:10.8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted-2);font-weight:700;background:#0e131b;border-bottom:1px solid var(--border);white-space:nowrap}
+table.table tbody td{padding:10px 13px;border-bottom:1px solid #151b25;vertical-align:middle}
+table.table tbody tr:last-child td{border-bottom:0}
+table.table tbody tr:hover{background:#121822}
+table.table .empty{text-align:center;color:var(--muted-2);padding:34px 12px}
+.cell-email{font-weight:600;color:#dbe3f1;word-break:break-all}
+.tiny{font-size:10.8px}.muted{color:var(--muted)}
+.pw{letter-spacing:2px;color:var(--muted);font-family:ui-monospace,monospace;font-size:12px}
+.actions{white-space:nowrap;text-align:right}
+tbody tr.selected{background:rgba(91,140,255,.07)}
+input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer}
+.badge-status{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+.badge-status::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge-status.connected{color:#7ff0a9;background:rgba(34,197,94,.13);border:1px solid rgba(34,197,94,.3)}
+.badge-status.disconnected{color:#9aa6bb;background:rgba(139,150,171,.11);border:1px solid rgba(139,150,171,.25)}
+.badge-status.failed{color:#ffa2a2;background:rgba(239,68,68,.13);border:1px solid rgba(239,68,68,.3)}
+.badge-status.pending{color:#ffd38a;background:rgba(245,158,11,.13);border:1px solid rgba(245,158,11,.3)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:#182030;color:#a9b8d4;border:1px solid var(--border)}
+.chips{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0 4px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:11.6px;font-weight:600;padding:6px 12px;border-radius:9px;background:#131a24;border:1px solid var(--border);color:var(--muted)}
+.chip b{color:var(--text);font-size:12.6px}
+.chip.ok{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08);color:#8bf0b0}
+.chip.ok b{color:#b6ffd2}
+.chip.bad{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08);color:#ffabab}
+.chip.warn{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.08);color:#ffd28a}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.toolbar .input,.toolbar .select{width:auto;min-width:160px;flex:0 1 auto}
+.toolbar .grow{flex:1 1 200px;min-width:140px}
+.feed{display:flex;flex-direction:column;gap:2px;max-height:320px;overflow:auto}
+.feed-item{display:flex;gap:11px;padding:9px 4px;border-bottom:1px solid #141a23;font-size:12.4px}
+.feed-item:last-child{border-bottom:0}
+.feed-ico{width:26px;height:26px;border-radius:8px;flex:0 0 auto;display:grid;place-items:center;font-size:12px;background:#182030;color:var(--accent)}
+.feed-ico.green{background:rgba(34,197,94,.13);color:#6ee7a0}
+.feed-ico.red{background:rgba(239,68,68,.13);color:#ff9c9c}
+.feed-ico.amber{background:rgba(245,158,11,.13);color:#ffcd7a}
+.feed-body{min-width:0;flex:1}
+.feed-body p{margin:0;color:#c3cddd;line-height:1.45;word-break:break-word}
+.feed-body time{font-size:10.6px;color:var(--muted-2)}
+.empty-feed{color:var(--muted-2);font-size:12.4px;padding:18px 4px;text-align:center}
+.bar-row{display:flex;align-items:center;gap:11px;margin-bottom:11px;font-size:12.2px}
+.bar-row .lbl{width:104px;color:var(--muted);flex:0 0 auto}
+.bar-track{flex:1;height:8px;background:#0b0f16;border-radius:20px;overflow:hidden;border:1px solid #1a212c}
+.bar-fill{height:100%;border-radius:20px;transition:width .4s}
+.bar-row .num{width:36px;text-align:right;font-weight:700}
+.mail-list{display:flex;flex-direction:column;gap:9px;max-height:640px;overflow:auto;padding-right:3px}
+.mail-item{display:flex;gap:12px;padding:13px 15px;border-radius:12px;cursor:pointer;background:#0f141d;border:1px solid #1a212c;transition:.15s}
+.mail-item:hover{border-color:#2a3446;background:#131a25}
+.mail-item.unread{border-left:3px solid var(--accent);background:#111825}
+.mail-avatar{width:36px;height:36px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff}
+.mail-main{min-width:0;flex:1}
+.mail-top{display:flex;gap:10px;align-items:center;margin-bottom:3px}
+.mail-from{font-weight:700;font-size:12.8px;color:#dde5f2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mail-date{margin-left:auto;font-size:10.8px;color:var(--muted-2);white-space:nowrap}
+.mail-subject{font-size:12.6px;color:#c2ccdb;margin-bottom:3px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mail-snippet{font-size:11.6px;color:var(--muted-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mail-src{font-size:10.4px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(91,140,255,.13);color:#a8c2ff;border:1px solid rgba(91,140,255,.28);white-space:nowrap}
+.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:400;display:flex;flex-direction:column;gap:9px;max-width:360px}
+.toast{display:flex;gap:10px;padding:12px 15px;border-radius:12px;background:#141b26;border:1px solid var(--border);box-shadow:var(--shadow);font-size:12.8px;color:var(--text);animation:toastIn .28s;border-left:3px solid var(--accent)}
+.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--red)}.toast.warn{border-left-color:var(--amber)}
+.toast .t-ico{font-size:14px}.toast .t-body{flex:1;line-height:1.45}
+.toast .t-body b{display:block;font-size:12.4px;margin-bottom:1px}
+.toast .t-body span{color:var(--muted);font-size:11.8px}
+@keyframes toastIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+.modal-overlay{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(4,6,10,.72);backdrop-filter:blur(5px)}
+.modal{width:100%;background:linear-gradient(180deg,#141a24,#0f141d);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);max-height:88vh;display:flex;flex-direction:column;animation:mIn .2s}
+@keyframes mIn{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #1a212c}
+.modal-head h3{margin:0;font-size:14.5px;font-weight:700;flex:1}
+.modal-body{padding:18px;overflow:auto;font-size:13px;line-height:1.62;color:#c8d2e2}
+.modal-foot{padding:14px 18px;border-top:1px solid #1a212c;display:flex;gap:9px;justify-content:flex-end}
+.modal-body .kv{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid #151b25;font-size:12.6px}
+.modal-body .kv:last-child{border-bottom:0}
+.modal-body .kv b{width:140px;flex:0 0 auto;color:var(--muted);font-weight:600}
+.modal-body .kv span{word-break:break-word}
+.callout{display:flex;gap:12px;padding:13px 15px;border-radius:12px;font-size:12.4px;line-height:1.62;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.28);color:#ffd79a;margin-bottom:16px}
+.callout.info{background:rgba(91,140,255,.07);border-color:rgba(91,140,255,.3);color:#b6cbfd}
+.callout.danger{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.3);color:#ffb3b3}
+.callout .c-ico{font-size:15px;line-height:1.3}
+.callout b{color:#fff}
+.switch{position:relative;display:inline-block;width:42px;height:23px;flex:0 0 auto}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#1e2634;border:1px solid var(--border);border-radius:23px;cursor:pointer;transition:.2s}
+.slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:2.5px;background:#8b96ab;border-radius:50%;transition:.2s}
+.switch input:checked + .slider{background:rgba(91,140,255,.32);border-color:rgba(91,140,255,.6)}
+.switch input:checked + .slider::before{transform:translateX(18px);background:var(--accent);box-shadow:0 0 10px rgba(91,140,255,.8)}
+.step-box{background:#0e131b;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.step-box h4{margin:0 0 8px;font-size:13px;color:#dbe6ff;display:flex;align-items:center;gap:9px}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:0 0 auto}
+.step-box p{margin:0;font-size:12.4px;line-height:1.65;color:#c0cbdb}
+.copy-box{display:flex;align-items:center;gap:8px;background:#080c12;border:1px solid var(--border);border-radius:8px;padding:8px 11px;margin:8px 0;font-family:ui-monospace,monospace;font-size:11.8px;color:#a8c2ff;word-break:break-all}
+.copy-box button{margin-left:auto;background:#1b2230;border:1px solid var(--border);color:#fff;padding:4px 9px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;flex:0 0 auto}
+@media(max-width:1080px){.grid-2{grid-template-columns:1fr}}
+@media(max-width:980px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:none}.main{margin-left:0;padding:0 15px 60px}.hamburger{display:inline-grid}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:80;display:none}.overlay.show{display:block}}
+@media(max-width:640px){.stat-grid{grid-template-columns:1fr 1fr}.quick-grid{grid-template-columns:1fr}.toast-wrap{left:14px;right:14px;max-width:none}}
+</style>
+</head>
+<body>
+<div class="global-bar" id="globalBar"><div class="global-bar-fill" id="globalBarFill"></div></div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">OB</div>
+      <div class="brand-text"><b>OUTLOOK BULK</b><span>Manager Pro</span></div>
+    </div>
+    <nav class="nav">
+      <div class="nav-label">Overview</div>
+      <button class="nav-item active" data-view="dashboard"><span class="ico">▦</span> Dashboard</button>
+      <div class="nav-label">Akun</div>
+      <button class="nav-item" data-view="import"><span class="ico">⤓</span> Bulk Import</button>
+      <button class="nav-item" data-view="accounts"><span class="ico">☰</span> Account Manager <span class="badge" id="navAccCount">0</span></button>
+      <div class="nav-label">Outlook</div>
+      <button class="nav-item" data-view="setup"><span class="ico">🔧</span> Setup Wizard</button>
+      <button class="nav-item" data-view="connections"><span class="ico">⚡</span> Connections</button>
+      <button class="nav-item" data-view="inbox"><span class="ico">✉</span> Centralized Inbox</button>
+      <button class="nav-item" data-view="forwarding"><span class="ico">⇄</span> Forwarding</button>
+      <div class="nav-label">Sistem</div>
+      <button class="nav-item" data-view="settings"><span class="ico">⚙</span> Data &amp; Settings</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="mode-chip" id="modeChip"><span class="mode-dot"></span><span id="modeChipText">Belum dikonfigurasi</span></div>
+      <div>v2.0 · Real OAuth + Graph API</div>
+    </div>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="icon-btn hamburger" id="btnHamburger" style="width:36px;height:36px;font-size:17px">☰</button>
+      <div class="page-title"><h1 id="pageTitle">Dashboard</h1><p id="pageSub">Ringkasan seluruh akun Outlook Anda</p></div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" id="btnSyncTop">⟳ Sync &amp; Forward</button>
+        <button class="btn btn-primary btn-sm" id="btnQuickImport">+ Import Akun</button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="view active" id="view-dashboard">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-top">Total Accounts <span class="dot"></span></div><div class="stat-value" id="statTotal">0</div><div class="stat-sub">Akun tersimpan</div></div>
+        <div class="stat-card"><div class="stat-top">Connected <span class="dot green"></span></div><div class="stat-value" id="statConnected">0</div><div class="stat-sub">Siap forward</div></div>
+        <div class="stat-card"><div class="stat-top">Disconnected <span class="dot gray"></span></div><div class="stat-value" id="statDisconnected">0</div><div class="stat-sub">Belum diotorisasi</div></div>
+        <div class="stat-card"><div class="stat-top">Failed <span class="dot red"></span></div><div class="stat-value" id="statFailed">0</div><div class="stat-sub">Perlu reconnect</div></div>
+        <div class="stat-card"><div class="stat-top">Total Emails <span class="dot cyan"></span></div><div class="stat-value" id="statEmails">0</div><div class="stat-sub">Tersimpan lokal</div></div>
+        <div class="stat-card"><div class="stat-top">Forwarded <span class="dot green"></span></div><div class="stat-value" id="statForwarded">0</div><div class="stat-sub">Email diteruskan</div></div>
+      </div>
+      <div class="grid-2" style="margin-bottom:18px">
+        <div class="panel">
+          <div class="panel-head"><h3>Synchronization Progress</h3><span class="spacer"></span><button class="btn btn-ghost btn-sm" id="btnSyncDash">Sync + Forward</button></div>
+          <div class="progress"><div class="progress-fill" id="syncBar"></div></div>
+          <div class="muted" id="syncText" style="font-size:11.8px">Belum ada proses sinkronisasi.</div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Quick Actions</h3></div>
+          <div class="quick-grid">
+            <button class="quick-btn" data-goto="setup"><span>🔧</span> Setup Wizard</button>
+            <button class="quick-btn" data-goto="import"><span>⤓</span> Bulk Import</button>
+            <button class="quick-btn" data-goto="connections"><span>⚡</span> Connect Outlook</button>
+            <button class="quick-btn" data-goto="forwarding"><span>⇄</span> Forwarding</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="panel"><div class="panel-head"><h3>Recent Activities</h3></div><div class="feed" id="activityFeed"></div></div>
+        <div class="panel"><div class="panel-head"><h3>Account Status</h3></div><div id="statusBreakdown"></div></div>
+      </div>
+    </section>
+
+    <!-- SETUP WIZARD -->
+    <section class="view" id="view-setup">
+      <div class="panel">
+        <div class="panel-head"><h3>🔧 Setup Wizard — 5 Menit Sekali Saja</h3><span class="pill" id="setupStatusPill">Belum selesai</span></div>
+        <div class="callout info">
+          <span class="c-ico">ⓘ</span>
+          <div>Microsoft mewajibkan setiap aplikasi punya <b>Client ID</b> sendiri (gratis). Ini satu-satunya cara agar app bisa akses email tanpa backend. Setelah selesai sekali, semua akun bisa di-connect.</div>
+        </div>
+
+        <div class="step-box">
+          <h4><span class="step-num">1</span> Buka Azure Portal</h4>
+          <p>Klik link di bawah, login pakai akun Microsoft Anda (bisa akun Outlook/Hotmail pribadi).</p>
+          <p style="margin-top:9px"><a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade" target="_blank" class="btn btn-primary btn-sm">🔗 Buka Azure App Registrations</a></p>
+        </div>
+
+        <div class="step-box">
+          <h4><span class="step-num">2</span> Daftarkan Aplikasi Baru</h4>
+          <p>Klik <b>+ New registration</b>, isi:</p>
+          <p style="margin-top:7px">• Name: <code>Outlook Bulk Manager</code><br>
+             • Supported account types: <b>Personal Microsoft accounts only</b> (untuk outlook/hotmail) atau <b>Accounts in any org directory and personal</b> (kalau perlu akun kerja juga)<br>
+             • Redirect URI: pilih <b>Single-page application (SPA)</b>, isi dengan URL di bawah</p>
+          <div class="copy-box"><span id="redirectUriDisplay">...</span><button id="btnCopyRedirect">Salin</button></div>
+          <p style="font-size:11.6px;color:var(--muted-2)">Redirect URI ini otomatis menunjuk ke halaman ini. Harus HTTPS atau http://localhost.</p>
+        </div>
+
+        <div class="step-box">
+          <h4><span class="step-num">3</span> Salin Application (Client) ID</h4>
+          <p>Setelah registrasi selesai, di halaman Overview akan terlihat <b>Application (client) ID</b>. Salin dan tempel di bawah:</p>
+          <div class="field" style="margin-top:11px">
+            <input class="input" id="wizClientId" placeholder="00000000-0000-0000-0000-000000000000">
+          </div>
+          <div class="field">
+            <label>Tenant</label>
+            <select class="select" id="wizTenant">
+              <option value="common">common (personal + work)</option>
+              <option value="consumers">consumers (hanya personal)</option>
+              <option value="organizations">organizations (hanya kerja)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="step-box">
+          <h4><span class="step-num">4</span> Tambahkan API Permissions</h4>
+          <p>Di menu kiri app Anda → <b>API permissions</b> → <b>Add a permission</b> → <b>Microsoft Graph</b> → <b>Delegated permissions</b>. Tambahkan:</p>
+          <p style="margin-top:7px">• <code>User.Read</code> (default)<br>
+             • <code>Mail.Read</code><br>
+             • <code>Mail.Send</code> ← <b>wajib untuk forward</b><br>
+             • <code>offline_access</code> ← untuk refresh token<br>
+             • <code>openid</code>, <code>profile</code>, <code>email</code></p>
+          <p style="margin-top:9px;font-size:11.8px;color:var(--muted)">Terakhir klik <b>Grant admin consent</b> jika tersedia (opsional untuk akun personal).</p>
+        </div>
+
+        <div class="step-box">
+          <h4><span class="step-num">5</span> Simpan &amp; Uji Koneksi</h4>
+          <button class="btn btn-primary" id="btnWizSave" style="width:100%;padding:13px">💾 Simpan Konfigurasi</button>
+        </div>
+
+        <div class="callout" style="margin-top:14px">
+          <span class="c-ico">⚠</span>
+          <div><b>Jika muncul error "CORS" atau "AADSTS" saat connect:</b><br>
+          Pastikan Redirect URI sudah terdaftar sebagai <b>Single-page application</b> (bukan Web) di Azure. Setelah mengubah platform, tunggu 1–2 menit.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BULK IMPORT -->
+    <section class="view" id="view-import">
+      <div class="panel">
+        <div class="panel-head"><h3>Bulk Account Import</h3><span class="pill">Format: akun:password</span></div>
+        <div class="callout info"><span class="c-ico">ⓘ</span><div>Tempel hingga 1.000 baris dengan format <b>email:password</b>. Password di-hash PBKDF2, tidak disimpan plaintext.</div></div>
+        <textarea class="textarea" id="importInput" spellcheck="false" placeholder="account1@outlook.com:Password123
+account2@hotmail.com:Password456"></textarea>
+        <div class="toolbar">
+          <button class="btn btn-primary" id="btnImport">⤓ Import Akun</button>
+          <button class="btn btn-ghost" id="btnSelectAllImport">Select All</button>
+          <button class="btn btn-ghost" id="btnClearImport">Clear All</button>
+          <button class="btn btn-danger" id="btnDeleteSelectedImport">Delete Selected</button>
+          <input class="input grow" id="importSearch" placeholder="Search account…">
+        </div>
+        <div class="chips" id="importStats"></div>
+        <div class="progress" style="margin-top:14px"><div class="progress-fill" id="importBar"></div></div>
+        <div class="muted" style="font-size:11.8px" id="importProgressText">Siap.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Preview Sebelum Import</h3><span class="spacer"></span><span class="muted" style="font-size:11.6px" id="previewCount">0 baris</span></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th style="width:38px"><input type="checkbox" id="importCheckAll"></th><th style="width:52px">#</th><th>Email</th><th>Password</th><th>Status</th><th>Keterangan</th></tr></thead>
+            <tbody id="importBody"><tr><td colspan="6" class="empty">Belum ada data.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCOUNT MANAGER -->
+    <section class="view" id="view-accounts">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Account Manager</h3><span class="spacer"></span>
+          <div class="toolbar" style="margin:0">
+            <input class="input" id="accSearch" placeholder="Search…" style="min-width:180px">
+            <select class="select" id="accFilter"><option value="">Semua Status</option><option value="connected">Connected</option><option value="disconnected">Disconnected</option><option value="failed">Failed</option></select>
+            <button class="btn btn-danger btn-sm" id="btnBulkDelete">Delete Selected</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th style="width:38px"><input type="checkbox" id="accCheckAll"></th><th>Email</th><th>Password</th><th>Status</th><th style="text-align:right">Actions</th></tr></thead>
+            <tbody id="accBody"><tr><td colspan="5" class="empty">Belum ada akun.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONNECTIONS -->
+    <section class="view" id="view-connections">
+      <div class="panel">
+        <div class="panel-head"><h3>Status Koneksi Mailbox</h3><span class="pill" id="oauthStatePill">Belum dikonfigurasi</span><span class="spacer"></span><button class="btn btn-ghost btn-sm" id="btnRefreshConn">⟳ Refresh</button></div>
+        <div class="callout info"><span class="c-ico">ⓘ</span><div>Klik <b>Connect</b> pada akun untuk diarahkan ke login Microsoft. Proses ini <b>harus disetujui pemilik akun</b>. Setelah connect, akun siap menerima email dan meneruskan otomatis.</div></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Email</th><th>Status</th><th>Token</th><th>Terakhir Sync</th><th style="text-align:right">Aksi</th></tr></thead>
+            <tbody id="connBody"><tr><td colspan="5" class="empty">Belum ada akun.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Authentication Logs</h3></div>
+        <div class="feed" id="authLogs"></div>
+      </div>
+    </section>
+
+    <!-- INBOX -->
+    <section class="view" id="view-inbox">
+      <div class="panel">
+        <div class="panel-head"><h3>Centralized Inbox</h3><span class="spacer"></span><button class="btn btn-primary btn-sm" id="btnSyncInbox">⟳ Sync + Forward</button></div>
+        <div class="toolbar">
+          <input class="input grow" id="mailSearch" placeholder="Cari email…">
+          <select class="select" id="mailAccount"><option value="">Semua Akun</option></select>
+          <input class="input" type="date" id="mailFrom">
+          <input class="input" type="date" id="mailTo">
+          <button class="btn btn-ghost btn-sm" id="btnMailReset">Reset</button>
+        </div>
+        <div class="chips" id="mailStats"></div>
+        <div class="mail-list" id="mailList" style="margin-top:14px"><div class="empty-feed">Belum ada email.</div></div>
+      </div>
+    </section>
+
+    <!-- FORWARDING -->
+    <section class="view" id="view-forwarding">
+      <div class="panel">
+        <div class="panel-head"><h3>Email Forwarding — Konfigurasi</h3></div>
+        <div class="grid-2" style="gap:0 18px">
+          <div class="field">
+            <label>Destination Email (alamat pusat)</label>
+            <input class="input" id="fwdDest" placeholder="inbox-pusat@domain.com">
+            <div class="hint">Semua email dari akun yang aktif akan diteruskan ke alamat ini.</div>
+          </div>
+          <div class="field">
+            <label>Status Forwarding Global</label>
+            <div style="display:flex;align-items:center;gap:12px;padding-top:4px">
+              <label class="switch"><input type="checkbox" id="fwdGlobal"><span class="slider"></span></label>
+              <span class="muted" style="font-size:12.2px" id="fwdGlobalLabel">Nonaktif</span>
+              <button class="btn btn-ghost btn-sm" id="btnSaveFwd" style="margin-left:auto">💾 Simpan</button>
+            </div>
+          </div>
+        </div>
+        <div class="callout" style="margin-top:14px"><span class="c-ico">⚠</span><div><b>Persetujuan wajib.</b> Mengaktifkan forwarding pada mailbox berarti Anda menyatakan pemilik mailbox telah memberi izin untuk meneruskan email ke alamat pusat tersebut.</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Forwarding per Account</h3></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Email</th><th>Status Koneksi</th><th>Forwarding</th><th>Terakhir Forward</th><th style="text-align:right">Aksi</th></tr></thead>
+            <tbody id="fwdBody"><tr><td colspan="5" class="empty">Belum ada akun.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Forwarding Logs</h3></div>
+        <div class="feed" id="fwdLogs"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="view-settings">
+      <div class="panel">
+        <div class="panel-head"><h3>Konfigurasi OAuth (dari Setup Wizard)</h3></div>
+        <div class="modal-body" style="padding:0">
+          <div class="kv"><b>Client ID</b><span id="cfgShowClientId">—</span></div>
+          <div class="kv"><b>Tenant</b><span id="cfgShowTenant">—</span></div>
+          <div class="kv"><b>Redirect URI</b><span id="cfgShowRedirect">—</span></div>
+          <div class="kv"><b>Scopes</b><span id="cfgShowScopes">—</span></div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head"><h3>Export Konfigurasi</h3></div>
+          <p class="muted" style="font-size:12.4px;margin-top:0">Tidak mengandung password, hash, atau token.</p>
+          <div class="toolbar"><button class="btn btn-primary" id="btnExportConfig">⭳ Export JSON</button></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Import Konfigurasi</h3></div>
+          <p class="muted" style="font-size:12.4px;margin-top:0">Akun masuk sebagai <b>disconnected</b>.</p>
+          <div class="toolbar"><input type="file" id="fileImportConfig" accept="application/json" class="input" style="max-width:260px"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Keamanan &amp; Penyimpanan</h3></div>
+        <div class="modal-body" style="padding:0">
+          <div class="kv"><b>Database</b><span id="dbStatus">IndexedDB · outlook_bulk_manager_pro</span></div>
+          <div class="kv"><b>Password</b><span>Hash PBKDF2 · tidak pernah disimpan plaintext</span></div>
+          <div class="kv"><b>Access Token</b><span>Hanya di memori, hilang saat reload</span></div>
+          <div class="kv"><b>Refresh Token</b><span>Disimpan di IndexedDB agar tidak perlu login ulang</span></div>
+        </div>
+        <div class="toolbar" style="margin-top:16px"><button class="btn btn-danger" id="btnWipe">⚠ Hapus Semua Data Lokal</button></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<div id="modalRoot"></div>
+
+<script>
+"use strict";
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10));
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const delay = (ms) => new Promise(r => setTimeout(r, ms));
+const bufToHex = (buf) => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+const EMAIL_RE = /^[^\s@:]+@[^\s@:]+\.[^\s@:]{2,}$/;
+const MAX_IMPORT_LINES = 1000;
+const PBKDF2_ITER = 10000;
+
+function fmtDate(ts) { if (!ts) return '—'; try { return new Date(ts).toLocaleString('id-ID', {dateStyle:'medium', timeStyle:'short'}); } catch(e) { return '—'; } }
+function fmtTime(ts) { if (!ts) return '—'; const d = new Date(ts), diff = Date.now() - d.getTime(); if (diff < 60000) return 'baru saja'; if (diff < 3600000) return Math.floor(diff/60000)+' menit lalu'; if (diff < 86400000) return Math.floor(diff/3600000)+' jam lalu'; return fmtDate(ts); }
+function relDate(iso) { if (!iso) return '—'; const d = new Date(iso), diff = Date.now() - d.getTime(); if (diff < 3600000) return Math.floor(diff/60000)+'m'; if (diff < 86400000) return Math.floor(diff/3600000)+'j'; if (diff < 604800000) return Math.floor(diff/86400000)+'h'; return d.toLocaleDateString('id-ID', {day:'2-digit', month:'short'}); }
+function el(html) { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; }
+function hashColor(str) { let h = 0; for (let i = 0; i < str.length; i++) h = (h*31 + str.charCodeAt(i)) | 0; const p = ['#5b8cff','#22d3ee','#a855f7','#f59e0b','#22c55e','#ef4444','#ec4899','#14b8a6']; return p[Math.abs(h) % p.length]; }
+function download(filename, content, mime='application/json') { const blob = new Blob([content], {type: mime}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 400); }
+
+async function pbkdf2(password, salt) {
+  try {
+    const enc = new TextEncoder();
+    const key = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({name:'PBKDF2', salt: enc.encode(salt), iterations: PBKDF2_ITER, hash: 'SHA-256'}, key, 256);
+    return bufToHex(bits);
+  } catch (e) {
+    let h1 = 0x811c9dc5, h2 = 0x1000193; const s = password + '|' + salt;
+    for (let i = 0; i < s.length; i++) { h1 ^= s.charCodeAt(i); h1 = Math.imul(h1, 16777619) >>> 0; h2 = (Math.imul(h2 ^ s.charCodeAt(i), 2246822519) >>> 0); }
+    return ('fb' + h1.toString(16).padStart(8, '0') + h2.toString(16).padStart(8, '0')).padEnd(64, '0');
+  }
+}
+function b64url(bytes) { let s = ''; for (const b of bytes) s += String.fromCharCode(b); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+async function makePkce() {
+  const verifier = b64url(crypto.getRandomValues(new Uint8Array(32)));
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
+  return { verifier, challenge: b64url(new Uint8Array(digest)), nonce: uid() };
+}
+
+/* ---------- IndexedDB ---------- */
+const DB_NAME = 'outlook_bulk_manager_pro_v2';
+const DB_VER = 1;
+const KEYPATH = { accounts: 'id', emails: 'id', logs: 'id', forwarding: 'accountId', settings: 'key' };
+let db = null;
+const mem = { accounts: [], emails: [], logs: [], forwarding: [], settings: [] };
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) return reject(new Error('IndexedDB tidak tersedia'));
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = (e) => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('accounts')) { const s = d.createObjectStore('accounts', {keyPath:'id'}); s.createIndex('email', 'email', {unique:true}); }
+      if (!d.objectStoreNames.contains('emails')) { const s = d.createObjectStore('emails', {keyPath:'id'}); s.createIndex('accountId', 'accountId'); }
+      if (!d.objectStoreNames.contains('logs')) d.createObjectStore('logs', {keyPath:'id'});
+      if (!d.objectStoreNames.contains('forwarding')) d.createObjectStore('forwarding', {keyPath:'accountId'});
+      if (!d.objectStoreNames.contains('settings')) d.createObjectStore('settings', {keyPath:'key'});
+    };
+    req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+    req.onerror = (e) => reject(e.target.error);
+  });
+}
+function store(name, mode='readonly') { return db.transaction(name, mode).objectStore(name); }
+function reqP(r) { return new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function dbGetAll(name) { if (!db) return mem[name].slice(); return reqP(store(name).getAll()); }
+async function dbPut(name, value) { if (!db) { const kp = KEYPATH[name]; const arr = mem[name]; const i = arr.findIndex(x => x[kp] === value[kp]); if (i >= 0) arr[i] = value; else arr.push(value); return value[kp]; } return reqP(store(name, 'readwrite').put(value)); }
+async function dbDel(name, key) { if (!db) { const kp = KEYPATH[name]; mem[name] = mem[name].filter(x => x[kp] !== key); return; } return reqP(store(name, 'readwrite').delete(key)); }
+async function dbClear(name) { if (!db) { mem[name] = []; return; } return reqP(store(name, 'readwrite').clear()); }
+async function getSetting(key, def) { if (!db) { const f = mem.settings.find(s => s.key === key); return f ? f.value : def; } const v = await reqP(store('settings').get(key)); return v ? v.value : def; }
+async function setSetting(key, value) { return dbPut('settings', {key, value}); }
+
+/* ---------- State ---------- */
+const state = {
+  view: 'dashboard', accounts: [], emails: [], logs: [], forwarding: [],
+  settings: {
+    clientId: '', tenantId: 'common', scopes: 'openid profile email offline_access User.Read Mail.Read Mail.Send',
+    forwardTo: '', forwardGlobal: false, setupDone: false
+  },
+  tokens: {}, importRows: {}, accSel: new Set(), syncRunning: false
+};
+
+function toast(message, type='info', title='') {
+  const icons = {success:'✓', error:'✕', warn:'⚠', info:'ⓘ'};
+  const node = el(`<div class="toast ${type}"><div class="t-ico">${icons[type]}</div><div class="t-body">${title ? `<b>${esc(title)}</b>` : ''}<span>${esc(message)}</span></div></div>`);
+  $('#toastWrap').appendChild(node);
+  setTimeout(() => { node.style.transition = 'opacity .22s, transform .22s'; node.style.opacity = '0'; node.style.transform = 'translateX(28px)'; setTimeout(() => node.remove(), 240); }, 4600);
+}
+
+function showModal({title, html, actions = [], width = '560px', onClose}) {
+  const overlay = el(`<div class="modal-overlay"><div class="modal" style="max-width:${width}"><div class="modal-head"><h3>${esc(title)}</h3><button class="icon-btn" data-modal-close>✕</button></div><div class="modal-body">${html}</div><div class="modal-foot"></div></div></div>`);
+  const foot = overlay.querySelector('.modal-foot');
+  const close = () => { overlay.remove(); if (onClose) onClose(); };
+  actions.forEach(a => {
+    const b = el(`<button class="btn ${a.class || 'btn-ghost'}">${esc(a.label)}</button>`);
+    b.addEventListener('click', async () => { const r = a.onClick ? await a.onClick(overlay) : undefined; if (r !== false) close(); });
+    foot.appendChild(b);
+  });
+  if (!actions.length) foot.remove();
+  overlay.querySelector('[data-modal-close]').addEventListener('click', close);
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  $('#modalRoot').appendChild(overlay);
+  return { overlay, close };
+}
+function confirmDialog(title, html, confirmLabel='Ya, lanjutkan', danger=false) {
+  return new Promise(resolve => {
+    showModal({ title, html, width: '520px', actions: [
+      {label: 'Batal', class: 'btn-ghost', onClick: () => resolve(false)},
+      {label: confirmLabel, class: danger ? 'btn-danger' : 'btn-primary', onClick: () => resolve(true)}
+    ], onClose: () => resolve(false)});
+  });
+}
+
+function showGlobalProgress(pct) { $('#globalBar').classList.add('active'); $('#globalBarFill').style.width = Math.max(0, Math.min(100, pct)) + '%'; }
+function hideGlobalProgress() { $('#globalBarFill').style.width = '100%'; setTimeout(() => { $('#globalBar').classList.remove('active'); $('#globalBarFill').style.width = '0%'; }, 350); }
+
+async function log(type, message) {
+  const rec = {id: uid(), time: Date.now(), type, message};
+  await dbPut('logs', rec);
+  state.logs.unshift(rec);
+  if (state.logs.length > 400) state.logs.length = 400;
+  renderActivity(); renderAuthLogs(); renderFwdLogs();
+}
+function logIcon(type) { switch(type) { case 'success': return {ico:'✓', cls:'green'}; case 'error': return {ico:'✕', cls:'red'}; case 'warn': return {ico:'⚠', cls:'amber'}; case 'auth': return {ico:'⚡', cls:''}; case 'import': return {ico:'⤓', cls:''}; case 'sync': return {ico:'⟳', cls:'green'}; case 'forward': return {ico:'⇄', cls:''}; default: return {ico:'ⓘ', cls:''}; } }
+
+async function reloadAll() {
+  state.accounts = await dbGetAll('accounts');
+  state.emails = await dbGetAll('emails');
+  state.forwarding = await dbGetAll('forwarding');
+  const logs = await dbGetAll('logs');
+  state.logs = logs.sort((a, b) => b.time - a.time);
+  const saved = await getSetting('settings', null);
+  if (saved) state.settings = Object.assign(state.settings, saved);
+}
+function statusBadge(status) {
+  const map = {connected:['connected','Connected'], disconnected:['disconnected','Disconnected'], failed:['failed','Failed'], pending:['pending','Pending']};
+  const [cls, label] = map[status] || ['disconnected', status || 'Unknown'];
+  return `<span class="badge-status ${cls}">${label}</span>`;
+}
+
+/* ---------- OAuth (real, browser-only, PKCE) ---------- */
+function redirectUri() { return location.protocol === 'file:' ? 'https://localhost/' : (location.origin + location.pathname); }
+
+async function connectAccount(accountId) {
+  const acc = state.accounts.find(a => a.id === accountId);
+  if (!acc) return;
+  if (!state.settings.clientId || !/^[0-9a-f-]{20,}$/i.test(state.settings.clientId.trim())) {
+    setView('setup');
+    toast('Lengkapi Setup Wizard dulu: Client ID belum diisi.', 'warn');
+    return;
+  }
+  if (location.protocol === 'file:') {
+    toast('OAuth tidak bisa jalan dari file://. Buka lewat https:// atau http://localhost.', 'error', 'Protokol salah');
+    return;
+  }
+  const ok = await confirmDialog('Otorisasi Diperlukan', `<p style="margin-top:0">Hubungkan <b>${esc(acc.email)}</b> lewat Microsoft OAuth2?</p><p class="muted" style="font-size:12.4px;line-height:1.7">Anda akan diarahkan ke <code>login.microsoftonline.com</code>. Login sebagai <b>${esc(acc.email)}</b> dan setujui izin baca + kirim email.</p>`, 'Lanjut ke Microsoft');
+  if (!ok) return;
+  try {
+    const pkce = await makePkce();
+    sessionStorage.setItem('obm_oauth_' + pkce.nonce, JSON.stringify({verifier: pkce.verifier, accountId, redirectUri: redirectUri()}));
+    await log('auth', `Mulai OAuth untuk ${acc.email}`);
+    const params = new URLSearchParams({
+      client_id: state.settings.clientId.trim(),
+      response_type: 'code',
+      redirect_uri: redirectUri(),
+      response_mode: 'query',
+      scope: state.settings.scopes,
+      state: pkce.nonce,
+      code_challenge: pkce.challenge,
+      code_challenge_method: 'S256',
+      login_hint: acc.email,
+      prompt: 'select_account'
+    });
+    location.href = `https://login.microsoftonline.com/${state.settings.tenantId}/oauth2/v2.0/authorize?${params}`;
+  } catch (e) { toast('Gagal mulai OAuth: ' + e.message, 'error'); }
+}
+
+async function handleOAuthCallback() {
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code');
+  const errParam = params.get('error');
+  const nonce = params.get('state');
+  if (!code && !errParam) return;
+  history.replaceState({}, document.title, location.pathname);
+
+  if (errParam) {
+    const desc = params.get('error_description') || errParam;
+    await log('error', 'OAuth error: ' + desc.slice(0, 160));
+    showModal({ title: 'Otorisasi Gagal', html: `<div class="callout danger" style="margin-top:0"><span class="c-ico">✕</span><div>${esc(desc)}</div></div>`, actions: [{label: 'Tutup', class: 'btn-primary'}] });
+    return;
+  }
+
+  const pendingRaw = nonce ? sessionStorage.getItem('obm_oauth_' + nonce) : null;
+  if (!pendingRaw) { toast('Sesi OAuth tidak ditemukan. Ulangi connect.', 'error'); return; }
+  sessionStorage.removeItem('obm_oauth_' + nonce);
+  const p = JSON.parse(pendingRaw);
+
+  showGlobalProgress(30);
+  try {
+    const res = await fetch(`https://login.microsoftonline.com/${state.settings.tenantId}/oauth2/v2.0/token`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({
+        client_id: state.settings.clientId.trim(),
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: p.redirectUri,
+        code_verifier: p.verifier,
+        scope: state.settings.scopes
+      })
+    });
+    showGlobalProgress(65);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.error || 'Token exchange failed');
+
+    const acc = state.accounts.find(a => a.id === p.accountId);
+    if (!acc) throw new Error('Akun tidak ditemukan');
+
+    state.tokens[acc.id] = { accessToken: data.access_token, refreshToken: data.refresh_token || null, expiresAt: Date.now() + (data.expires_in || 3600) * 1000 };
+    if (data.refresh_token) await dbPut('settings', {key: 'refresh_' + acc.id, value: data.refresh_token});
+
+    acc.status = 'connected';
+    acc.tokenExpiry = state.tokens[acc.id].expiresAt;
+    acc.updatedAt = Date.now();
+    await dbPut('accounts', acc);
+
+    await log('success', `${acc.email} berhasil terhubung`);
+    toast(`${acc.email} berhasil terhubung!`, 'success', 'Berhasil');
+    showGlobalProgress(100);
+    setTimeout(hideGlobalProgress, 400);
+    await reloadAll(); renderAll();
+  } catch (e) {
+    hideGlobalProgress();
+    await log('error', 'Token exchange gagal: ' + e.message);
+    showModal({ title: 'Gagal Menukar Token', width: '600px', html: `<div class="callout danger" style="margin-top:0"><span class="c-ico">✕</span><div><b>${esc(e.message)}</b><br><br>Cek:<br>• Redirect URI terdaftar sebagai <b>Single-page application</b> di Azure<br>• URL di browser = URL redirect yang didaftarkan (sama persis)<br>• Scope <code>Mail.Read Mail.Send offline_access</code> sudah ditambahkan</div></div>`, actions: [{label: 'Tutup', class: 'btn-primary'}] });
+  }
+}
+
+async function refreshAccessToken(accountId) {
+  const stored = await getSetting('refresh_' + accountId, null);
+  if (!stored) return null;
+  try {
+    const res = await fetch(`https://login.microsoftonline.com/${state.settings.tenantId}/oauth2/v2.0/token`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({
+        client_id: state.settings.clientId.trim(),
+        grant_type: 'refresh_token',
+        refresh_token: stored,
+        scope: state.settings.scopes
+      })
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    state.tokens[accountId] = { accessToken: data.access_token, refreshToken: data.refresh_token || stored, expiresAt: Date.now() + (data.expires_in || 3600) * 1000 };
+    if (data.refresh_token) await dbPut('settings', {key: 'refresh_' + accountId, value: data.refresh_token});
+    return state.tokens[accountId].accessToken;
+  } catch (e) { return null; }
+}
+async function getValidToken(accountId) {
+  const t = state.tokens[accountId];
+  if (t && t.expiresAt > Date.now() + 60000) return t.accessToken;
+  return await refreshAccessToken(accountId);
+}
+
+async function disconnectAccount(id) {
+  const acc = state.accounts.find(a => a.id === id);
+  if (!acc) return;
+  const ok = await confirmDialog('Disconnect', `Putuskan <b>${esc(acc.email)}</b> dan hapus token?`, 'Ya, putuskan', true);
+  if (!ok) return;
+  delete state.tokens[id];
+  await dbDel('settings', 'refresh_' + id);
+  acc.status = 'disconnected'; acc.tokenExpiry = null; acc.updatedAt = Date.now();
+  await dbPut('accounts', acc);
+  await reloadAll(); renderAll();
+  await log('warn', `Koneksi ${acc.email} diputuskan`);
+  toast('Koneksi diputuskan.', 'info');
+}
+
+/* ---------- Graph API ---------- */
+async function graphFetch(accountId, path, options = {}) {
+  const token = await getValidToken(accountId);
+  if (!token) throw new Error('Token tidak valid. Silakan reconnect.');
+  const res = await fetch('https://graph.microsoft.com/v1.0' + path, { ...options, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...(options.headers || {}) } });
+  if (!res.ok) {
+    const txt = await res.text();
+    if (res.status === 401) {
+      // Try refresh once
+      const refreshed = await refreshAccessToken(accountId);
+      if (refreshed) return graphFetch(accountId, path, options);
+      throw new Error('Unauthorized (token expired). Reconnect akun.');
+    }
+    throw new Error('Graph HTTP ' + res.status + ': ' + txt.slice(0, 160));
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+async function fetchMessages(acc) {
+  const data = await graphFetch(acc.id, '/me/messages?$top=50&$select=id,subject,from,receivedDateTime,bodyPreview,body,hasAttachments,isRead&$orderby=receivedDateTime desc');
+  return (data.value || []).map(m => ({
+    id: acc.id + ':' + m.id,
+    graphId: m.id,
+    accountId: acc.id,
+    accountEmail: acc.email,
+    fromName: (m.from && m.from.emailAddress && m.from.emailAddress.name) || '',
+    fromAddress: (m.from && m.from.emailAddress && m.from.emailAddress.address) || '',
+    subject: m.subject || '(tanpa subjek)',
+    date: m.receivedDateTime || new Date().toISOString(),
+    body: (m.body && m.body.content) || m.bodyPreview || '',
+    unread: !m.isRead,
+    attachments: m.hasAttachments ? [{name: 'Lampiran', size: 0}] : []
+  }));
+}
+
+async function forwardMessage(accountId, graphId, toAddress, comment) {
+  await graphFetch(accountId, `/me/messages/${encodeURIComponent(graphId)}/forward`, {
+    method: 'POST',
+    body: JSON.stringify({
+      comment: comment || 'Diteruskan otomatis oleh Outlook Bulk Manager Pro',
+      toRecipients: [{emailAddress: {address: toAddress}}]
+    })
+  });
+  return true;
+}
+
+/* ---------- Sync + Forward ---------- */
+function setSyncUI(pct, text) { const bar = $('#syncBar'); if (bar) bar.style.width = Math.max(0, Math.min(100, pct)) + '%'; const t = $('#syncText'); if (t && text) t.textContent = text; }
+
+async function syncMailboxes() {
+  if (state.syncRunning) return toast('Sinkronisasi sedang berjalan.', 'warn');
+  const targets = state.accounts.filter(a => a.status === 'connected');
+  if (!targets.length) { setView('connections'); return toast('Tidak ada akun terhubung. Connect dulu.', 'warn'); }
+
+  state.syncRunning = true;
+  showGlobalProgress(0); setSyncUI(0, 'Memulai…');
+  let totalNew = 0, totalForwarded = 0, okCount = 0, failCount = 0;
+  const fwdDest = (state.settings.forwardTo || '').trim();
+
+  for (let i = 0; i < targets.length; i++) {
+    const acc = targets[i];
+    try {
+      const msgs = await fetchMessages(acc);
+      for (const m of msgs) await dbPut('emails', m);
+      totalNew += msgs.length;
+
+      const fwd = fwdRecord(acc.id);
+      if (fwd && fwd.enabled && fwd.destination && EMAIL_RE.test(fwd.destination)) {
+        for (const m of msgs) {
+          try {
+            await forwardMessage(acc.id, m.graphId, fwd.destination);
+            totalForwarded++;
+            m.forwarded = true;
+            m.forwardedTo = fwd.destination;
+            await dbPut('emails', m);
+          } catch (e) { await log('error', `Forward gagal ${acc.email}: ${e.message.slice(0, 80)}`); }
+          await delay(120); // hindari throttle
+        }
+        fwd.lastForward = Date.now();
+        await dbPut('forwarding', fwd);
+      }
+
+      acc.lastSync = Date.now(); acc.status = 'connected'; await dbPut('accounts', acc);
+      okCount++;
+    } catch (e) {
+      failCount++;
+      acc.status = e.message.includes('Unauthorized') || e.message.includes('Token') ? 'failed' : acc.status;
+      await dbPut('accounts', acc);
+      await log('error', `Sync ${acc.email} gagal: ${e.message.slice(0, 100)}`);
+    }
+    const pct = Math.round(((i+1) / targets.length) * 100);
+    setSyncUI(pct, `Memproses ${i+1}/${targets.length}… (${totalNew} email, ${totalForwarded} forward)`);
+    showGlobalProgress(pct);
+  }
+
+  hideGlobalProgress(); state.syncRunning = false;
+  await reloadAll(); renderAll();
+  await log('sync', `Selesai: ${okCount} akun, ${totalNew} email, ${totalForwarded} diteruskan${fwdDest ? ' ke ' + fwdDest : ''}`);
+  toast(`${totalNew} email diproses · ${totalForwarded} diteruskan${fwdDest ? ' ke ' + fwdDest : ''}${failCount ? ' · ' + failCount + ' gagal' : ''}`, failCount ? 'warn' : 'success');
+}
+
+/* ---------- Bulk Import ---------- */
+function parseImport(text) {
+  const rawLines = String(text || '').split('\n');
+  const seen = new Map(); const rows = []; let idx = 0; let truncated = false;
+  for (const line of rawLines) {
+    const raw = line.trim(); if (!raw) continue; idx++; if (idx > MAX_IMPORT_LINES) { truncated = true; break; }
+    const pos = raw.indexOf(':');
+    let email = '', password = '', error = null;
+    if (pos <= 0) error = 'Format harus akun:password';
+    else {
+      email = raw.slice(0, pos).trim();
+      password = raw.slice(pos + 1);
+      if (!EMAIL_RE.test(email)) error = 'Email tidak valid';
+      else if (!password.trim()) error = 'Password kosong';
+    }
+    let dupBatch = false, dupDb = false;
+    if (!error) { const key = email.toLowerCase(); if (seen.has(key)) dupBatch = true; else seen.set(key, idx); dupDb = state.accounts.some(a => String(a.email).toLowerCase() === key); }
+    const dup = dupBatch || dupDb;
+    rows.push({ no: idx, raw, email, password, error, dup, dupType: dupBatch ? 'batch' : (dupDb ? 'db' : null), selected: !error && !dup });
+  }
+  return { rows, truncated };
+}
+
+function renderImport() {
+  const { rows, truncated } = parseImport($('#importInput').value);
+  state.importRows = rows;
+  const valid = rows.filter(r => !r.error && !r.dup);
+  const invalid = rows.filter(r => r.error);
+  const dups = rows.filter(r => r.dup);
+  const selected = rows.filter(r => r.selected && !r.error);
+  $('#importStats').innerHTML = `<div class="chip">Total <b>${rows.length}</b></div><div class="chip ok">Valid <b>${valid.length}</b></div><div class="chip bad">Invalid <b>${invalid.length}</b></div><div class="chip warn">Duplikat <b>${dups.length}</b></div><div class="chip">Dipilih <b>${selected.length}</b></div>`;
+  if (truncated) toast(`Maks ${MAX_IMPORT_LINES} baris.`, 'warn');
+  const q = ($('#importSearch').value || '').trim().toLowerCase();
+  const shown = q ? rows.filter(r => r.email.toLowerCase().includes(q)) : rows;
+  $('#previewCount').textContent = shown.length + ' baris';
+  const body = $('#importBody');
+  if (!shown.length) body.innerHTML = `<tr><td colspan="6" class="empty">Belum ada data.</td></tr>`;
+  else body.innerHTML = shown.map(r => {
+    let statusHtml, infoHtml;
+    if (r.error) { statusHtml = `<span class="badge-status failed">Invalid</span>`; infoHtml = `<span class="muted tiny">${esc(r.error)}</span>`; }
+    else if (r.dup) { statusHtml = `<span class="badge-status pending">Duplicate</span>`; infoHtml = `<span class="muted tiny">${r.dupType === 'batch' ? 'Duplikat dalam input' : 'Sudah ada di database'}</span>`; }
+    else { statusHtml = `<span class="badge-status connected">Valid</span>`; infoHtml = `<span class="muted tiny">Siap diimpor</span>`; }
+    const pwCell = r.password ? '•'.repeat(Math.min(12, Math.max(6, r.password.length))) : '<span class="muted">—</span>';
+    return `<tr class="${r.selected ? 'selected' : ''}"><td><input type="checkbox" data-imp-sel="${r.no}" ${r.selected ? 'checked' : ''} ${r.error ? 'disabled' : ''}></td><td class="muted tiny">${r.no}</td><td class="cell-email">${esc(r.email) || '—'}</td><td><span class="pw">${pwCell}</span></td><td>${statusHtml}</td><td>${infoHtml}</td></tr>`;
+  }).join('');
+  const allValid = rows.filter(r => !r.error).length;
+  $('#importCheckAll').checked = allValid > 0 && rows.filter(r => !r.error).every(r => r.selected);
+}
+
+async function doImport() {
+  const rows = state.importRows.filter(r => r.selected && !r.error && !r.dup && r.password);
+  if (!rows.length) return toast('Tidak ada baris valid yang dipilih.', 'warn');
+  const ok = await confirmDialog('Konfirmasi Import', `<p style="margin-top:0">Impor <b>${rows.length} akun</b>?</p><p class="muted" style="font-size:12.4px;line-height:1.6">Password di-hash PBKDF2 (satu arah). Status awal: <b>Disconnected</b> sampai di-connect lewat OAuth.</p>`, `Import ${rows.length} Akun`);
+  if (!ok) return;
+  showGlobalProgress(0);
+  const bar = $('#importBar'), txt = $('#importProgressText');
+  let done = 0, success = 0, failed = 0;
+  for (const r of rows) {
+    try {
+      const salt = uid(); const pwHash = await pbkdf2(r.password, salt); r.password = '';
+      await dbPut('accounts', {id: uid(), email: r.email, domain: r.email.split('@')[1].toLowerCase(), pwHash, pwSalt: salt, status: 'disconnected', createdAt: Date.now(), updatedAt: Date.now(), lastSync: null, tokenExpiry: null, note: ''});
+      success++;
+    } catch (e) { failed++; }
+    done++;
+    const pct = Math.round((done / rows.length) * 100);
+    bar.style.width = pct + '%'; showGlobalProgress(pct);
+    txt.textContent = `Memproses ${done}/${rows.length}… (${success} berhasil)`;
+    if (done % 15 === 0) await delay(0);
+  }
+  await reloadAll(); hideGlobalProgress();
+  txt.textContent = `Selesai. ${success} diimpor${failed ? ', ' + failed + ' gagal' : ''}.`;
+  bar.style.width = '100%';
+  $('#importInput').value = ''; state.importRows = []; renderImport(); renderAll();
+  await log('import', `${success} akun diimpor`);
+  toast(`${success} akun diimpor. Connect di halaman Connections.`, 'success');
+}
+
+/* ---------- Accounts ---------- */
+function renderAccounts() {
+  const q = ($('#accSearch').value || '').trim().toLowerCase();
+  const f = $('#accFilter').value;
+  const list = state.accounts.filter(a => (!q || String(a.email).toLowerCase().includes(q)) && (!f || a.status === f)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  $('#navAccCount').textContent = state.accounts.length;
+  const body = $('#accBody');
+  if (!list.length) body.innerHTML = `<tr><td colspan="5" class="empty">${state.accounts.length ? 'Tidak ada yang cocok.' : 'Belum ada akun. Mulai dengan Bulk Import.'}</td></tr>`;
+  else body.innerHTML = list.map(a => `<tr class="${state.accSel.has(a.id) ? 'selected' : ''}"><td><input type="checkbox" data-acc-sel="${a.id}" ${state.accSel.has(a.id) ? 'checked' : ''}></td><td><div class="cell-email">${esc(a.email)}</div><div class="muted tiny">${esc(a.domain || '')} · ${fmtTime(a.createdAt)}</div></td><td><span class="pw">••••••••</span> <span class="muted tiny">hash-only</span></td><td>${statusBadge(a.status)}</td><td class="actions"><button class="icon-btn" data-act="view" data-id="${a.id}" title="View">👁</button><button class="icon-btn" data-act="edit" data-id="${a.id}" title="Edit">✎</button><button class="icon-btn danger" data-act="delete" data-id="${a.id}" title="Delete">🗑</button></td></tr>`).join('');
+  $('#accCheckAll').checked = list.length > 0 && list.every(a => state.accSel.has(a.id));
+  $('#btnBulkDelete').disabled = state.accSel.size === 0;
+}
+
+function viewAccount(id) {
+  const a = state.accounts.find(x => x.id === id); if (!a) return;
+  const tok = state.tokens[a.id];
+  showModal({ title: 'Detail Akun', width: '560px', html: `
+    <div class="kv"><b>Email</b><span>${esc(a.email)}</span></div>
+    <div class="kv"><b>Domain</b><span>${esc(a.domain || '—')}</span></div>
+    <div class="kv"><b>Status</b><span>${statusBadge(a.status)}</span></div>
+    <div class="kv"><b>Password</b><span>•••••••• <span class="muted tiny">(tidak disimpan plaintext)</span></span></div>
+    <div class="kv"><b>Ditambahkan</b><span>${fmtDate(a.createdAt)}</span></div>
+    <div class="kv"><b>Terakhir Sync</b><span>${fmtDate(a.lastSync)}</span></div>
+    <div class="kv"><b>Token</b><span>${tok ? 'Aktif hingga ' + fmtDate(tok.expiresAt) : 'Tidak ada di memori'}</span></div>
+  `, actions: [{label: 'Tutup', class: 'btn-primary'}] });
+}
+
+async function editAccount(id) {
+  const a = state.accounts.find(x => x.id === id); if (!a) return;
+  showModal({ title: 'Edit Akun', width: '520px', html: `
+    <div class="field"><label>Email</label><input class="input" id="editEmail" value="${esc(a.email)}"></div>
+    <div class="field"><label>Status</label><select class="select" id="editStatus"><option value="disconnected" ${a.status==='disconnected'?'selected':''}>Disconnected</option><option value="connected" ${a.status==='connected'?'selected':''}>Connected</option><option value="failed" ${a.status==='failed'?'selected':''}>Failed</option></select></div>
+    <div class="field"><label>Catatan</label><input class="input" id="editNote" value="${esc(a.note || '')}"></div>
+  `, actions: [
+    {label: 'Batal', class: 'btn-ghost'},
+    {label: 'Simpan', class: 'btn-primary', onClick: () => {
+      const email = ($('#editEmail').value || '').trim();
+      if (!EMAIL_RE.test(email)) { toast('Email tidak valid', 'error'); return false; }
+      const dupe = state.accounts.some(x => x.id !== a.id && x.email.toLowerCase() === email.toLowerCase());
+      if (dupe) { toast('Email sudah dipakai akun lain', 'error'); return false; }
+      a.email = email; a.domain = email.split('@')[1].toLowerCase(); a.status = $('#editStatus').value; a.note = ($('#editNote').value || '').trim(); a.updatedAt = Date.now();
+      dbPut('accounts', a).then(() => { renderAll(); log('success', `${email} diperbarui`); toast('Disimpan.', 'success'); });
+    }}
+  ]});
+}
+
+async function deleteAccount(id) {
+  const a = state.accounts.find(x => x.id === id); if (!a) return;
+  const ok = await confirmDialog('Hapus Akun', `Hapus <b>${esc(a.email)}</b> beserta email dan log-nya?`, 'Ya, hapus', true);
+  if (!ok) return;
+  await dbDel('accounts', id); await dbDel('forwarding', id); await dbDel('settings', 'refresh_' + id);
+  const mails = state.emails.filter(m => m.accountId === id);
+  for (const m of mails) await dbDel('emails', m.id);
+  delete state.tokens[id]; state.accSel.delete(id);
+  await reloadAll(); renderAll();
+  await log('warn', `Akun ${a.email} dihapus`);
+  toast('Dihapus.', 'success');
+}
+
+/* ---------- Inbox ---------- */
+function renderInbox() {
+  const sel = $('#mailAccount'); const prev = sel.value;
+  sel.innerHTML = '<option value="">Semua Akun</option>' + state.accounts.map(a => `<option value="${a.id}">${esc(a.email)}</option>`).join('');
+  sel.value = prev && state.accounts.some(a => a.id === prev) ? prev : '';
+  const q = ($('#mailSearch').value || '').trim().toLowerCase();
+  const accId = sel.value;
+  const from = $('#mailFrom').value ? new Date($('#mailFrom').value + 'T00:00:00').getTime() : null;
+  const to = $('#mailTo').value ? new Date($('#mailTo').value + 'T23:59:59').getTime() : null;
+  let list = state.emails.slice();
+  if (accId) list = list.filter(m => m.accountId === accId);
+  if (q) list = list.filter(m => (m.subject||'').toLowerCase().includes(q) || (m.fromName||'').toLowerCase().includes(q) || (m.fromAddress||'').toLowerCase().includes(q) || (m.body||'').toLowerCase().includes(q) || (m.accountEmail||'').toLowerCase().includes(q));
+  if (from) list = list.filter(m => new Date(m.date).getTime() >= from);
+  if (to) list = list.filter(m => new Date(m.date).getTime() <= to);
+  list.sort((a, b) => new Date(b.date) - new Date(a.date));
+  $('#mailStats').innerHTML = `<div class="chip">Total <b>${state.emails.length}</b></div><div class="chip">Ditampilkan <b>${list.length}</b></div><div class="chip warn">Unread <b>${list.filter(m => m.unread).length}</b></div>`;
+  const wrap = $('#mailList');
+  if (!list.length) { wrap.innerHTML = `<div class="empty-feed">${state.emails.length ? 'Tidak ada yang cocok.' : 'Belum ada email. Connect akun lalu Sync.'}</div>`; return; }
+  wrap.innerHTML = list.map(m => {
+    const color = hashColor(m.accountEmail || m.accountId);
+    const initial = (m.fromName || m.fromAddress || '?').trim().charAt(0).toUpperCase();
+    const fwdBadge = m.forwarded ? ` <span class="tiny" style="color:#7ff0a9">✓ forwarded</span>` : '';
+    return `<div class="mail-item ${m.unread ? 'unread' : ''}" data-mail="${m.id}">
+      <div class="mail-avatar" style="background:${color}">${esc(initial)}</div>
+      <div class="mail-main">
+        <div class="mail-top"><span class="mail-from">${esc(m.fromName || m.fromAddress || 'Pengirim')}</span><span class="mail-src">${esc(m.accountEmail)}</span><span class="mail-date">${relDate(m.date)}</span></div>
+        <div class="mail-subject">${esc(m.subject || '(tanpa subjek)')}${fwdBadge}</div>
+        <div class="mail-snippet">${esc(String(m.body || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').slice(0, 140))}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openEmail(id) {
+  const m = state.emails.find(x => x.id === id); if (!m) return;
+  const bodyText = String(m.body || '').replace(/<[^>]*>/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  showModal({ title: m.subject || '(tanpa subjek)', width: '680px', html: `
+    <div class="kv"><b>Dari</b><span>${esc(m.fromName || '')} &lt;${esc(m.fromAddress || '')}&gt;</span></div>
+    <div class="kv"><b>Akun Sumber</b><span><span class="mail-src">${esc(m.accountEmail)}</span></span></div>
+    <div class="kv"><b>Tanggal</b><span>${fmtDate(m.date)}</span></div>
+    <div class="kv"><b>Forwarded</b><span>${m.forwarded ? '✓ ke ' + esc(m.forwardedTo || '') : 'Belum'}</span></div>
+    <div style="margin-top:16px;padding:14px;background:#0d1219;border:1px solid #1a212c;border-radius:10px;white-space:pre-wrap;font-size:12.8px;line-height:1.7;color:#c6d0e0;max-height:320px;overflow:auto">${esc(bodyText || '(kosong)')}</div>
+  `, actions: [{label: 'Tutup', class: 'btn-primary'}] });
+  if (m.unread) { m.unread = false; dbPut('emails', m).then(() => { state.emails = state.emails.map(x => x.id === m.id ? m : x); renderInbox(); }); }
+}
+
+/* ---------- Forwarding ---------- */
+function fwdRecord(accountId) { return state.forwarding.find(f => f.accountId === accountId) || null; }
+
+async function toggleForwarding(accountId, enable) {
+  const acc = state.accounts.find(a => a.id === accountId); if (!acc) return;
+  const dest = ($('#fwdDest').value || '').trim();
+  if (enable) {
+    if (!dest || !EMAIL_RE.test(dest)) { toast('Isi Destination Email valid dulu.', 'warn'); renderForwarding(); return; }
+    if (acc.status !== 'connected') { toast('Connect akun ini dulu sebelum aktifkan forwarding.', 'warn'); renderForwarding(); return; }
+    const ok = await confirmDialog('Persetujuan Forwarding', `<p style="margin-top:0">Aktifkan forwarding untuk <b>${esc(acc.email)}</b> → <b>${esc(dest)}</b>?</p><p class="muted" style="font-size:12.4px;line-height:1.7">Dengan menekan tombol di bawah, Anda menyatakan pemilik mailbox telah memberikan izin meneruskan email ke alamat pusat tersebut.</p>`, 'Saya setujui & aktifkan');
+    if (!ok) { renderForwarding(); return; }
+  }
+  const rec = fwdRecord(accountId) || {accountId, enabled: false, destination: '', createdAt: Date.now(), lastForward: null};
+  rec.enabled = enable; rec.destination = dest || rec.destination; rec.updatedAt = Date.now();
+  await dbPut('forwarding', rec);
+  await reloadAll(); renderForwarding(); renderDashboard();
+  await log('forward', `${enable ? 'Aktifkan' : 'Nonaktifkan'} forwarding ${acc.email}${enable ? ' → ' + dest : ''}`);
+  toast(enable ? 'Forwarding diaktifkan.' : 'Dinonaktifkan.', enable ? 'success' : 'info');
+}
+
+function renderForwarding() {
+  $('#fwdDest').value = state.settings.forwardTo || '';
+  $('#fwdGlobal').checked = !!state.settings.forwardGlobal;
+  $('#fwdGlobalLabel').textContent = state.settings.forwardGlobal ? 'Aktif' : 'Nonaktif';
+  const body = $('#fwdBody');
+  if (!state.accounts.length) { body.innerHTML = `<tr><td colspan="5" class="empty">Belum ada akun.</td></tr>`; return; }
+  body.innerHTML = state.accounts.map(a => {
+    const rec = fwdRecord(a.id); const on = rec && rec.enabled;
+    return `<tr><td><div class="cell-email">${esc(a.email)}</div></td><td>${statusBadge(a.status)}</td><td><span class="badge-status ${on ? 'connected' : 'disconnected'}">${on ? 'Enabled' : 'Disabled'}</span>${on && rec.destination ? `<div class="muted tiny" style="margin-top:4px">→ ${esc(rec.destination)}</div>` : ''}</td><td class="muted tiny">${rec && rec.lastForward ? fmtDate(rec.lastForward) : '—'}</td><td class="actions"><label class="switch"><input type="checkbox" data-fwd="${a.id}" ${on ? 'checked' : ''}><span class="slider"></span></label></td></tr>`;
+  }).join('');
+}
+
+function renderFwdLogs() {
+  const wrap = $('#fwdLogs'); if (!wrap) return;
+  const list = state.logs.filter(l => l.type === 'forward').slice(0, 30);
+  if (!list.length) { wrap.innerHTML = `<div class="empty-feed">Belum ada aktivitas forwarding.</div>`; return; }
+  wrap.innerHTML = list.map(l => { const ic = logIcon(l.type); return `<div class="feed-item"><div class="feed-ico ${ic.cls}">${ic.ico}</div><div class="feed-body"><p>${esc(l.message)}</p><time>${fmtTime(l.time)}</time></div></div>`; }).join('');
+}
+
+/* ---------- Dashboard ---------- */
+function renderDashboard() {
+  const total = state.accounts.length;
+  const connected = state.accounts.filter(a => a.status === 'connected').length;
+  const disconnected = state.accounts.filter(a => a.status === 'disconnected').length;
+  const failed = state.accounts.filter(a => a.status === 'failed').length;
+  const forwardedCount = state.emails.filter(m => m.forwarded).length;
+  $('#statTotal').textContent = total;
+  $('#statConnected').textContent = connected;
+  $('#statDisconnected').textContent = disconnected;
+  $('#statFailed').textContent = failed;
+  $('#statEmails').textContent = state.emails.length;
+  $('#statForwarded').textContent = forwardedCount;
+  const rows = [['Connected', connected, '#22c55e'], ['Disconnected', disconnected, '#8b96ab'], ['Failed', failed, '#ef4444']];
+  const max = Math.max(1, total);
+  $('#statusBreakdown').innerHTML = rows.map(([l, v, c]) => `<div class="bar-row"><span class="lbl">${l}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/max*100)}%;background:${c}"></div></div><span class="num">${v}</span></div>`).join('') + `<div class="chips" style="margin-top:14px"><div class="chip">Total <b>${total}</b></div><div class="chip ok">Forwarded <b>${forwardedCount}</b></div></div>`;
+}
+
+function renderActivity() {
+  const wrap = $('#activityFeed'); if (!wrap) return;
+  const list = state.logs.slice(0, 12);
+  if (!list.length) { wrap.innerHTML = `<div class="empty-feed">Belum ada aktivitas.</div>`; return; }
+  wrap.innerHTML = list.map(l => { const ic = logIcon(l.type); return `<div class="feed-item"><div class="feed-ico ${ic.cls}">${ic.ico}</div><div class="feed-body"><p>${esc(l.message)}</p><time>${fmtTime(l.time)}</time></div></div>`; }).join('');
+}
+function renderAuthLogs() {
+  const wrap = $('#authLogs'); if (!wrap) return;
+  const list = state.logs.filter(l => l.type === 'auth' || l.type === 'error' || l.type === 'success').slice(0, 25);
+  if (!list.length) { wrap.innerHTML = `<div class="empty-feed">Belum ada log autentikasi.</div>`; return; }
+  wrap.innerHTML = list.map(l => { const ic = logIcon(l.type); return `<div class="feed-item"><div class="feed-ico ${ic.cls}">${ic.ico}</div><div class="feed-body"><p>${esc(l.message)}</p><time>${fmtTime(l.time)}</time></div></div>`; }).join('');
+}
+
+function renderConnections() {
+  const pill = $('#oauthStatePill');
+  if (state.settings.clientId) { pill.textContent = 'OAuth siap'; pill.style.color = '#7ff0a9'; }
+  else { pill.textContent = 'Setup Wizard belum selesai'; pill.style.color = '#ffd38a'; }
+  const body = $('#connBody');
+  if (!state.accounts.length) { body.innerHTML = `<tr><td colspan="5" class="empty">Belum ada akun. Import dulu.</td></tr>`; return; }
+  body.innerHTML = state.accounts.map(a => {
+    const tok = state.tokens[a.id];
+    let tokenText = '<span class="muted tiny">Tidak ada di memori</span>';
+    if (tok) {
+      const left = Math.max(0, Math.round((tok.expiresAt - Date.now()) / 60000));
+      tokenText = left > 0 ? `<span class="badge-status connected">Aktif</span> <span class="muted tiny">${left} mnt</span>` : `<span class="badge-status failed">Expired</span>`;
+    } else if (a.status === 'connected') tokenText = `<span class="badge-status pending">Akan auto-refresh</span>`;
+    return `<tr><td><div class="cell-email">${esc(a.email)}</div></td><td>${statusBadge(a.status)}</td><td>${tokenText}</td><td class="muted tiny">${fmtDate(a.lastSync)}</td><td class="actions"><button class="btn btn-ghost btn-sm" data-conn="connect" data-id="${a.id}">${a.status === 'connected' ? 'Reconnect' : 'Connect'}</button>${a.status === 'connected' ? `<button class="btn btn-danger btn-sm" data-conn="disconnect" data-id="${a.id}" style="margin-left:6px">Disconnect</button>` : ''}</td></tr>`;
+  }).join('');
+}
+
+function renderModeChip() {
+  const chip = $('#modeChip'), txt = $('#modeChipText');
+  if (state.settings.clientId) { chip.classList.add('on'); txt.textContent = 'OAuth aktif'; }
+  else { chip.classList.remove('on'); txt.textContent = 'Setup belum selesai'; }
+}
+
+function renderSettings() {
+  $('#cfgShowClientId').textContent = state.settings.clientId || '— (belum diatur)';
+  $('#cfgShowTenant').textContent = state.settings.tenantId || '—';
+  $('#cfgShowRedirect').textContent = redirectUri();
+  $('#cfgShowScopes').textContent = state.settings.scopes || '—';
+  $('#dbStatus').textContent = db ? 'IndexedDB · outlook_bulk_manager_pro_v2 (aktif)' : 'Memori fallback (data hilang saat reload)';
+  const pill = $('#setupStatusPill');
+  if (state.settings.clientId) { pill.textContent = 'Selesai ✓'; pill.style.color = '#7ff0a9'; }
+}
+
+function renderAll() {
+  renderModeChip(); renderDashboard(); renderAccounts(); renderConnections(); renderInbox(); renderForwarding(); renderSettings(); renderActivity(); renderAuthLogs(); renderFwdLogs();
+  // Auto-fill setup wizard
+  if ($('#wizClientId')) $('#wizClientId').value = state.settings.clientId || '';
+  if ($('#wizTenant')) $('#wizTenant').value = state.settings.tenantId || 'common';
+  if ($('#redirectUriDisplay')) $('#redirectUriDisplay').textContent = redirectUri();
+}
+
+/* ---------- Navigation ---------- */
+const PAGE_META = {
+  dashboard: ['Dashboard', 'Ringkasan seluruh akun Outlook'],
+  import: ['Bulk Import', 'Impor akun massal (email:password)'],
+  accounts: ['Account Manager', 'Kelola daftar akun'],
+  setup: ['Setup Wizard', 'Konfigurasi OAuth2 sekali saja (5 menit)'],
+  connections: ['Outlook Connections', 'Otorisasi per mailbox'],
+  inbox: ['Centralized Inbox', 'Semua email dalam satu tampilan'],
+  forwarding: ['Email Forwarding', 'Teruskan email ke alamat pusat'],
+  settings: ['Data & Settings', 'Konfigurasi & keamanan']
+};
+
+function setView(name) {
+  if (!PAGE_META[name]) return;
+  state.view = name;
+  $$('.view').forEach(v => v.classList.remove('active'));
+  const target = $('#view-' + name); if (target) target.classList.add('active');
+  $$('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  $('#pageTitle').textContent = PAGE_META[name][0];
+  $('#pageSub').textContent = PAGE_META[name][1];
+  $('#sidebar').classList.remove('open'); $('#overlay').classList.remove('show');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  if (name === 'accounts') renderAccounts();
+  if (name === 'connections') renderConnections();
+  if (name === 'inbox') renderInbox();
+  if (name === 'forwarding') renderForwarding();
+  if (name === 'settings' || name === 'setup') { renderSettings(); renderAll(); }
+  if (name === 'import') renderImport();
+}
+
+/* ---------- Bind Events ---------- */
+function bindAll() {
+  $$('.nav-item').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  $$('[data-goto]').forEach(b => b.addEventListener('click', () => setView(b.dataset.goto)));
+  $('#btnHamburger').addEventListener('click', () => { $('#sidebar').classList.toggle('open'); $('#overlay').classList.toggle('show'); });
+  $('#overlay').addEventListener('click', () => { $('#sidebar').classList.remove('open'); $('#overlay').classList.remove('show'); });
+
+  $('#btnQuickImport').addEventListener('click', () => setView('import'));
+  $('#btnSyncTop').addEventListener('click', syncMailboxes);
+  $('#btnSyncDash').addEventListener('click', syncMailboxes);
+  $('#btnSyncInbox').addEventListener('click', syncMailboxes);
+  $('#btnRefreshConn').addEventListener('click', () => { renderConnections(); toast('Status diperbarui.', 'info'); });
+  $('#btnMailReset').addEventListener('click', () => { $('#mailSearch').value = ''; $('#mailAccount').value = ''; $('#mailFrom').value = ''; $('#mailTo').value = ''; renderInbox(); });
+  $('#mailSearch').addEventListener('input', renderInbox);
+  $('#mailAccount').addEventListener('change', renderInbox);
+  $('#mailFrom').addEventListener('change', renderInbox);
+  $('#mailTo').addEventListener('change', renderInbox);
+  $('#mailList').addEventListener('click', e => { const it = e.target.closest('[data-mail]'); if (it) openEmail(it.dataset.mail); });
+
+  // Setup Wizard
+  $('#btnCopyRedirect').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(redirectUri()); toast('Redirect URI disalin.', 'success'); }
+    catch (e) { toast('Gagal menyalin. Salin manual: ' + redirectUri(), 'warn'); }
+  });
+  $('#btnWizSave').addEventListener('click', async () => {
+    const cid = ($('#wizClientId').value || '').trim();
+    if (!cid || cid.length < 20) return toast('Client ID terlihat tidak valid.', 'error');
+    state.settings.clientId = cid;
+    state.settings.tenantId = $('#wizTenant').value || 'common';
+    state.settings.setupDone = true;
+    await setSetting('settings', state.settings);
+    renderAll();
+    await log('auth', 'Konfigurasi OAuth disimpan (Client ID: ' + cid.slice(0, 8) + '…)');
+    toast('Konfigurasi tersimpan! Sekarang Connect akun.', 'success');
+    setView('connections');
+  });
+
+  // Import
+  let impT = null;
+  $('#importInput').addEventListener('input', () => { clearTimeout(impT); impT = setTimeout(renderImport, 200); });
+  $('#importBody').addEventListener('change', e => { const cb = e.target.closest('[data-imp-sel]'); if (!cb) return; const no = Number(cb.dataset.impSel); const r = state.importRows.find(x => x.no === no); if (r) r.selected = cb.checked; renderImport(); });
+  $('#importCheckAll').addEventListener('change', e => { state.importRows.forEach(r => { if (!r.error) r.selected = e.target.checked; }); renderImport(); });
+  $('#btnSelectAllImport').addEventListener('click', () => { state.importRows.forEach(r => { if (!r.error && !r.dup) r.selected = true; }); renderImport(); toast('Semua valid dipilih.', 'info'); });
+  $('#btnClearImport').addEventListener('click', async () => { const ok = await confirmDialog('Clear All', 'Kosongkan textarea dan preview?', 'Ya'); if (!ok) return; $('#importInput').value = ''; state.importRows = []; renderImport(); toast('Dikosongkan.', 'info'); });
+  $('#btnDeleteSelectedImport').addEventListener('click', () => {
+    const sel = new Set(state.importRows.filter(r => r.selected).map(r => r.no));
+    if (!sel.size) return toast('Belum ada yang dipilih.', 'warn');
+    const remaining = state.importRows.filter(r => !sel.has(r.no));
+    $('#importInput').value = remaining.map(r => r.error ? r.raw : `${r.email}:${r.password || ''}`).join('\n');
+    renderImport(); toast(`${sel.size} baris dihapus.`, 'success');
+  });
+  $('#importSearch').addEventListener('input', renderImport);
+  $('#btnImport').addEventListener('click', doImport);
+
+  // Accounts
+  $('#accSearch').addEventListener('input', renderAccounts);
+  $('#accFilter').addEventListener('change', renderAccounts);
+  $('#accBody').addEventListener('click', e => { const btn = e.target.closest('[data-act]'); if (!btn) return; const id = btn.dataset.id; if (btn.dataset.act === 'view') viewAccount(id); if (btn.dataset.act === 'edit') editAccount(id); if (btn.dataset.act === 'delete') deleteAccount(id); });
+  $('#accBody').addEventListener('change', e => { const cb = e.target.closest('[data-acc-sel]'); if (!cb) return; if (cb.checked) state.accSel.add(cb.dataset.accSel); else state.accSel.delete(cb.dataset.accSel); renderAccounts(); });
+  $('#accCheckAll').addEventListener('change', e => { const q = ($('#accSearch').value || '').trim().toLowerCase(); const f = $('#accFilter').value; const list = state.accounts.filter(a => (!q || a.email.toLowerCase().includes(q)) && (!f || a.status === f)); if (e.target.checked) list.forEach(a => state.accSel.add(a.id)); else list.forEach(a => state.accSel.delete(a.id)); renderAccounts(); });
+  $('#btnBulkDelete').addEventListener('click', async () => {
+    if (!state.accSel.size) return;
+    const ok = await confirmDialog('Bulk Delete', `Hapus <b>${state.accSel.size} akun</b>?`, 'Ya, hapus', true); if (!ok) return;
+    const ids = Array.from(state.accSel);
+    for (const id of ids) { await dbDel('accounts', id); await dbDel('forwarding', id); await dbDel('settings', 'refresh_' + id); delete state.tokens[id]; }
+    const mails = state.emails.filter(m => ids.includes(m.accountId));
+    for (const m of mails) await dbDel('emails', m.id);
+    state.accSel.clear(); await reloadAll(); renderAll();
+    await log('warn', `${ids.length} akun dihapus`);
+    toast(`${ids.length} akun dihapus.`, 'success');
+  });
+
+  // Connections
+  $('#connBody').addEventListener('click', e => {
+    const btn = e.target.closest('[data-conn]'); if (!btn) return;
+    if (btn.dataset.conn === 'connect') connectAccount(btn.dataset.id);
+    if (btn.dataset.conn === 'disconnect') disconnectAccount(btn.dataset.id);
+  });
+
+  // Forwarding
+  $('#btnSaveFwd').addEventListener('click', async () => {
+    const dest = ($('#fwdDest').value || '').trim();
+    if (dest && !EMAIL_RE.test(dest)) return toast('Email tidak valid.', 'error');
+    state.settings.forwardTo = dest;
+    state.settings.forwardGlobal = $('#fwdGlobal').checked;
+    await setSetting('settings', state.settings);
+    $('#fwdGlobalLabel').textContent = state.settings.forwardGlobal ? 'Aktif' : 'Nonaktif';
+    await log('forward', `Setting forwarding disimpan (${dest || 'kosong'})`);
+    toast('Disimpan.', 'success');
+  });
+  $('#fwdGlobal').addEventListener('change', e => { $('#fwdGlobalLabel').textContent = e.target.checked ? 'Aktif' : 'Nonaktif'; });
+  $('#fwdBody').addEventListener('change', e => { const cb = e.target.closest('[data-fwd]'); if (!cb) return; toggleForwarding(cb.dataset.fwd, cb.checked); });
+
+  // Settings
+  $('#btnExportConfig').addEventListener('click', () => {
+    const payload = { app: 'OUTLOOK BULK MANAGER PRO', version: 2, exportedAt: new Date().toISOString(), settings: {clientId: state.settings.clientId, tenantId: state.settings.tenantId, scopes: state.settings.scopes, forwardTo: state.settings.forwardTo, forwardGlobal: state.settings.forwardGlobal}, accounts: state.accounts.map(a => ({email: a.email, domain: a.domain, status: a.status, createdAt: a.createdAt, lastSync: a.lastSync, note: a.note || ''})) };
+    download('obm-config-' + Date.now() + '.json', JSON.stringify(payload, null, 2));
+    log('success', 'Export konfigurasi dilakukan');
+    toast('Konfigurasi diexport.', 'success');
+  });
+  $('#fileImportConfig').addEventListener('change', async e => {
+    const file = e.target.files && e.target.files[0]; if (!file) return;
+    try {
+      const data = JSON.parse(await file.text());
+      if (!data || !Array.isArray(data.accounts)) throw new Error('Format tidak dikenali');
+      const ok = await confirmDialog('Import Konfigurasi', `File berisi <b>${data.accounts.length} akun</b>. Lanjutkan?`, 'Ya');
+      if (!ok) { e.target.value = ''; return; }
+      let added = 0, skipped = 0;
+      for (const a of data.accounts) {
+        const email = String(a.email || '').trim();
+        if (!EMAIL_RE.test(email) || state.accounts.some(x => x.email.toLowerCase() === email.toLowerCase())) { skipped++; continue; }
+        await dbPut('accounts', {id: uid(), email, domain: email.split('@')[1].toLowerCase(), pwHash: null, pwSalt: null, status: 'disconnected', createdAt: Date.now(), updatedAt: Date.now(), lastSync: null, tokenExpiry: null, note: a.note || ''});
+        added++;
+      }
+      if (data.settings) { state.settings = Object.assign(state.settings, data.settings); await setSetting('settings', state.settings); }
+      await reloadAll(); renderAll();
+      toast(`${added} akun ditambahkan, ${skipped} dilewati.`, 'success');
+    } catch (err) { toast('Gagal: ' + err.message, 'error'); }
+    e.target.value = '';
+  });
+  $('#btnWipe').addEventListener('click', async () => {
+    const ok = await confirmDialog('Hapus Semua Data', 'Seluruh akun, email, log, dan konfigurasi akan dihapus permanen.', 'Ya, hapus semua', true);
+    if (!ok) return;
+    await dbClear('accounts'); await dbClear('emails'); await dbClear('logs'); await dbClear('forwarding'); await dbClear('settings');
+    state.tokens = {}; state.accSel.clear();
+    state.settings = {clientId: '', tenantId: 'common', scopes: 'openid profile email offline_access User.Read Mail.Read Mail.Send', forwardTo: '', forwardGlobal: false, setupDone: false};
+    await reloadAll(); renderAll();
+    toast('Semua data dihapus.', 'success');
+  });
+
+  // Esc to close modal
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { const m = $('.modal-overlay'); if (m) m.remove(); } });
+}
+
+/* ---------- Auto-refresh tokens on load ---------- */
+async function bootstrapTokens() {
+  for (const acc of state.accounts) {
+    if (acc.status === 'connected') {
+      const tok = await refreshAccessToken(acc.id);
+      if (!tok) { acc.status = 'disconnected'; await dbPut('accounts', acc); }
+    }
+  }
+}
+
+/* ---------- Init ---------- */
+(async function init() {
+  try { await openDB(); } catch (e) { db = null; }
+  await reloadAll();
+  bindAll();
+  await bootstrapTokens();
+  await reloadAll();
+  renderAll();
+  renderImport();
+
+  if (location.protocol === 'file:') {
+    setTimeout(() => {
+      showModal({
+        title: '⚠ Buka lewat HTTPS atau localhost',
+        width: '560px',
+        html: `<div class="callout danger" style="margin-top:0"><span class="c-ico">✕</span><div><b>Anda membuka file ini lewat <code>file://</code>.</b><br><br>OAuth Microsoft <b>tidak bisa</b> berjalan dari protokol ini. Cara paling mudah:</div></div>
+        <p style="font-size:12.4px;line-height:1.8;margin:0">
+          <b>Opsi 1 — GitHub Pages (gratis):</b><br>
+          1. Buat repo baru di github.com<br>
+          2. Upload <code>index.html</code><br>
+          3. Settings → Pages → aktifkan → dapat URL <code>https://username.github.io/repo/</code><br><br>
+          <b>Opsi 2 — Lokal:</b><br>
+          Buka terminal di folder file ini, jalankan:<br>
+          <code style="background:#000;padding:3px 8px;border-radius:5px;font-size:12px">npx serve</code><br>
+          Lalu buka <code>http://localhost:3000</code>
+        </p>`,
+        actions: [{label: 'Mengerti', class: 'btn-primary'}]
+      });
+    }, 800);
+  } else if (!state.settings.clientId) {
+    setTimeout(() => setView('setup'), 400);
+  }
+
+  await log('system', 'Aplikasi dimuat');
+})();
+</script>
+</body>
+</html>
